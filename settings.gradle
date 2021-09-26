@@ -9,3 +9,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "File & Network Playground"
 include ':app'
+include ':domain'
+include ':data'
