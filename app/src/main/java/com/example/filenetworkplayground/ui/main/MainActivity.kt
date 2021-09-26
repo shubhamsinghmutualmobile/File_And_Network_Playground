@@ -1,17 +1,32 @@
 package com.example.filenetworkplayground.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.filenetworkplayground.R
 import com.example.filenetworkplayground.base.BaseActivity
 import com.example.filenetworkplayground.databinding.ActivityMainBinding
 import com.example.filenetworkplayground.ui.adapters.FileAdapter
+import com.example.filenetworkplayground.ui.main.LaunchStates.Success
 import com.example.filenetworkplayground.utils.findPostFix
 import com.example.filenetworkplayground.utils.shortToast
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.io.File
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, MainVM>() {
+
+  companion object {
+    private const val TAG = "MainActivity"
+  }
+
   private lateinit var fileAdapter: FileAdapter
 
   override fun getViewModelClass(): Class<MainVM> = MainVM::class.java
@@ -23,7 +38,25 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainVM>() {
     supportActionBar?.let {
       title = "Your files"
     }
+
+    setupObservers()
     setupViews()
+  }
+
+  private fun setupObservers() {
+    lifecycleScope.launch {
+      lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+        viewModel.launchesFlow.collect { launchState ->
+          when (launchState) {
+            is Success -> {
+              refreshRvItems()
+              Log.d(TAG, "Response is: ${launchState.data.map { it.name }}")
+            }
+            else -> Unit
+          }
+        }
+      }
+    }
   }
 
   override fun onResume() {
@@ -41,18 +74,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainVM>() {
     fileAdapter = FileAdapter(::onRvItemSavePressed, ::onRvItemDeletePressed)
     with(binding.mainRv) {
       adapter = fileAdapter
-      setPadding(0, 0, 0, binding.mainFab.top)
     }
-    binding.mainRv.smoothScrollToPosition(0)
   }
 
   private fun onFabPressed() {
     val counter = getExternalFilesDir(null)?.listFiles()?.size
     val file = File(getExternalFilesDir(null)?.path, "MyFile${counter}.txt")
     val filePostFix = counter.findPostFix()
-    file.appendText("This is the $counter$filePostFix file by Shubham!")
+    file.appendText("This is the $counter$filePostFix file!")
     refreshRvItems()
-    binding.mainRv.smoothScrollToPosition(fileAdapter.itemCount)
   }
 
   private fun onRvItemSavePressed(
@@ -67,7 +97,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainVM>() {
   private fun onRvItemDeletePressed(file: File): Boolean {
     val isDeleted = file.delete()
     if (isDeleted) {
-      refreshRvItems()
+      refreshRvItems(scrollToTop = false)
       shortToast(getString(R.string.fileDeletionSuccess))
     } else {
       shortToast(getString(R.string.fileDeletionFailure))
@@ -75,7 +105,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainVM>() {
     return isDeleted
   }
 
-  private fun refreshRvItems() = fileAdapter.submitList(getExternalFilesDir(null)?.listFiles()?.toList()?.asReversed())
+  private fun refreshRvItems(scrollToTop: Boolean = true) {
+    fileAdapter.submitList(getExternalFilesDir(null)?.listFiles()?.toList()?.asReversed())
+    if (scrollToTop) {
+      lifecycleScope.launchWhenResumed {
+        delay(1)
+        binding.mainRv.smoothScrollToPosition(0)
+      }
+    }
+  }
 
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
     menuInflater.inflate(R.menu.activity_main_menu, menu)

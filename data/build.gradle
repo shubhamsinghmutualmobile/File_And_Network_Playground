@@ -3,6 +3,7 @@ plugins {
   id("kotlin-android")
   id("kotlin-kapt")
   id("dagger.hilt.android.plugin")
+  id("com.apollographql.apollo").version("$appolo_graphql_version")
 }
 
 android {
@@ -31,6 +32,10 @@ android {
   kotlinOptions {
     jvmTarget = '1.8'
   }
+  apollo {
+    packageName.set("com.example")
+    generateKotlinModels.set(true)
+  }
 }
 
 dependencies {
@@ -54,4 +59,12 @@ dependencies {
   def moshi_version = "1.12.0"
   implementation("com.squareup.moshi:moshi-kotlin:$moshi_version")
   kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi_version")
+
+  implementation("com.apollographql.apollo:apollo-runtime:$appolo_graphql_version")
+  implementation("com.apollographql.apollo:apollo-coroutines-support:$appolo_graphql_version")
+
+  def coroutinesVersion = "1.5.1"
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesVersion")
 }

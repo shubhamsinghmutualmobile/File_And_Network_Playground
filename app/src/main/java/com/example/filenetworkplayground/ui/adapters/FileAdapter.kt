@@ -39,7 +39,10 @@ class FileAdapter(
       with(binding) {
         fileItemEt.setText(file.readText())
         fileItemFileName.text = file.name
-        fileItemSaveBtn.setOnClickListener { onSaveBtnPressed(file, binding.fileItemEt.text.toString()) }
+        fileItemSaveBtn.setOnClickListener {
+          if (binding.fileItemEt.text.toString() != file.readText())
+          onSaveBtnPressed(file, binding.fileItemEt.text.toString())
+        }
         fileItemDeleteBtn.setOnClickListener { onDeleteBtnPressed(file) }
       }
     }

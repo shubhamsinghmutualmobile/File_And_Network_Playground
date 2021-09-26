@@ -4,28 +4,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.main.MainActivity"
+    android:animateLayoutChanges="true"
     >
-
-  <data>
-    <variable
-        name="viewModel"
-        type="com.example.filenetworkplayground.ui.main.MainVM"
-        />
-  </data>
 
   <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/mainRv"
+    <ProgressBar
+        android:id="@+id/progressBar2"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:indeterminateOnly="true"
+        android:translationY="-6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        style="?android:attr/progressBarStyleHorizontal"
+        loadingState="@{viewModel.launchesFlow}"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mainRv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/recyclerViewPadding_relativeToFab"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar2"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/file_item"
         />
@@ -36,14 +45,21 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:clickable="true"
+        android:contentDescription="@string/mainFab_contentDescription"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add"
         tools:ignore="SpeakableTextPresentCheck"
-        android:focusable="true"
-        android:contentDescription="@string/mainFab_contentDescription"
         />
   </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <data>
+    <variable
+        name="viewModel"
+        type="com.example.filenetworkplayground.ui.main.MainVM"
+        />
+  </data>
 
 </layout>
 
