@@ -1,0 +1,10 @@
+<resources>
+  <string name="app_name">File &amp; Network Playground</string>
+  <string name="fileItem_btnTitle">Save text</string>
+  <string name="fileItem_etHint">Write some text here</string>
+  <string name="mainFab_contentDescription">Add file</string>
+  <string name="fileDeletionSuccess">File successfully deleted!</string>
+  <string name="fileDeletionFailure">Could not delete file!</string>
+  <string name="textSaveSuccessMsg">Text saved!</string>
+  <string name="allFilesDeletionSuccessful">Deleted all files successfully!</string>
+</resources>
