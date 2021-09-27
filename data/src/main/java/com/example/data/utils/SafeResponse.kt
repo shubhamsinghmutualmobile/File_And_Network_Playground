@@ -1,11 +1,11 @@
 package com.example.data.utils
 
 import com.apollographql.apollo.api.Response
+import com.apollographql.apollo.exception.ApolloException
 import com.example.domain.utils.SafeResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 
 suspend fun <T> safeApiCall(
   dispatcher: CoroutineDispatcher = Dispatchers.IO,
@@ -20,7 +20,7 @@ suspend fun <T> safeApiCall(
       }
     } catch (e: Exception) {
       when (e) {
-        is HttpException -> SafeResult.NetworkError
+        is ApolloException -> SafeResult.NetworkError
         else -> SafeResult.Failure("${e.localizedMessage}")
       }
     }

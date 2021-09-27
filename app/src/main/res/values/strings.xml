@@ -7,4 +7,5 @@
   <string name="fileDeletionFailure">Could not delete file!</string>
   <string name="textSaveSuccessMsg">Text saved!</string>
   <string name="allFilesDeletionSuccessful">Deleted all files successfully!</string>
+  <string name="network_error_msg">Please check your network connection!</string>
 </resources>

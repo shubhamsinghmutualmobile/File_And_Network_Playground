@@ -11,7 +11,6 @@ import com.example.filenetworkplayground.R
 import com.example.filenetworkplayground.base.BaseActivity
 import com.example.filenetworkplayground.databinding.ActivityMainBinding
 import com.example.filenetworkplayground.ui.adapters.FileAdapter
-import com.example.filenetworkplayground.ui.main.LaunchStates.Success
 import com.example.filenetworkplayground.utils.findPostFix
 import com.example.filenetworkplayground.utils.shortToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,10 +47,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainVM>() {
       lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
         viewModel.launchesFlow.collect { launchState ->
           when (launchState) {
-            is Success -> {
+            is LaunchStates.Success -> {
               refreshRvItems()
               Log.d(TAG, "Response is: ${launchState.data.map { it.name }}")
             }
+            is LaunchStates.Failure -> shortToast(launchState.msg)
+            is LaunchStates.NetworkError -> shortToast(getString(R.string.network_error_msg))
             else -> Unit
           }
         }
