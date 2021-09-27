@@ -1,4 +1,4 @@
-package com.example.data.injection
+package com.example.domain.injections
 
 import com.example.domain.repositories.ILaunchesRepo
 import com.example.domain.usecases.GetLaunchesFilesUseCase
@@ -14,6 +14,6 @@ object UseCaseModule {
 
   @Provides
   @Singleton
-  fun providesGetLaunchesFilesUseCase(launchesRepo: ILaunchesRepo): GetLaunchesFilesUseCase = GetLaunchesFilesUseCase(launchesRepo)
+  fun providesGetLaunchesFilesUseCase(launchesRepo: ILaunchesRepo) = GetLaunchesFilesUseCase(launchesRepo)
 
 }
