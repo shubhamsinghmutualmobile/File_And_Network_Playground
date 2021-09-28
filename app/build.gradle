@@ -4,6 +4,7 @@ plugins {
   id("kotlin-kapt")
   id("dagger.hilt.android.plugin")
   id("com.apollographql.apollo").version("$appolo_graphql_version")
+  id("com.google.protobuf") version "0.8.15"
 }
 
 android {
@@ -45,6 +46,38 @@ android {
   }
 }
 
+protobuf {
+  protoc {
+    artifact = "com.google.protobuf:protoc:${rootProject.ext["protobufVersion"]}"
+  }
+  plugins {
+    java {
+      artifact = "io.grpc:protoc-gen-grpc-java:${rootProject.ext["grpcVersion"]}"
+    }
+    grpc {
+      artifact = "io.grpc:protoc-gen-grpc-java:${rootProject.ext["grpcVersion"]}"
+    }
+    grpckt {
+      artifact = "io.grpc:protoc-gen-grpc-kotlin:${rootProject.ext["grpcKotlinVersion"]}:jdk7@jar"
+    }
+  }
+  generateProtoTasks {
+    all().forEach {
+      it.plugins {
+        java {
+          option("lite")
+        }
+        grpc {
+          option("lite")
+        }
+        grpckt {
+          option("lite")
+        }
+      }
+    }
+  }
+}
+
 dependencies {
 
   implementation("androidx.core:core-ktx:1.6.0")
@@ -71,4 +104,13 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesVersion")
+
+  api("io.grpc:grpc-protobuf-lite:${rootProject.ext["grpcVersion"]}")
+  api("io.grpc:grpc-kotlin-stub:${rootProject.ext["grpcKotlinVersion"]}")
+  api("com.google.protobuf:protobuf-javalite:${rootProject.ext["protobufVersion"]}")
+  runtimeOnly("io.grpc:grpc-okhttp:${rootProject.ext["grpcVersion"]}")
+}
+java {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
 }

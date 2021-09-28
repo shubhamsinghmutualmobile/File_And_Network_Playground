@@ -56,6 +56,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainVM>() {
             else -> Unit
           }
         }
+
+        viewModel.featuresFlow.collect { featureState ->
+          when (featureState) {
+            is FeatureStates.Success -> {
+              Log.d(TAG, "Features received are: ${featureState.data}")
+            }
+            is FeatureStates.NetworkError -> shortToast(getString(R.string.network_error_msg))
+            else -> Unit
+          }
+        }
       }
     }
   }

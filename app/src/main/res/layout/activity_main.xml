@@ -22,7 +22,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         style="?android:attr/progressBarStyleHorizontal"
-        loadingState="@{viewModel.launchesFlow}"
+        launchLoadingState="@{viewModel.launchesFlow}"
+        featureLoadingState="@{viewModel.featuresFlow}"
         />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mainRv"

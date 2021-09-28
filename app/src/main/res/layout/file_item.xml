@@ -47,12 +47,15 @@
         />
     <TextView
         android:id="@+id/fileItem_fileName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
         android:fontFamily="sans-serif-condensed-medium"
+        android:textAlignment="viewEnd"
         app:layout_constraintBaseline_toBaselineOf="@+id/fileItem_saveBtn"
         app:layout_constraintEnd_toStartOf="@+id/fileItem_saveBtn"
+        app:layout_constraintStart_toEndOf="@+id/fileItem_deleteBtn"
         tools:text="FileName1.txt"
         />
     <ImageView
